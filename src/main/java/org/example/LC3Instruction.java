@@ -30,13 +30,11 @@ public class LC3Instruction {
         String opcode = binaryString.substring(0, 4);
 
         switch (opcode) {
-            case "0001":
+            case "0001" -> {
                 // ADD instruction
                 int drIndex = Integer.parseInt(binaryString.substring(4, 7), 2);
                 int sr1Index = Integer.parseInt(binaryString.substring(7, 10), 2);
-
                 boolean isImmediate = Integer.parseInt(binaryString.substring(10, 11)) == 1;
-
                 if (isImmediate) {
                     // ADD instruction with immediate value
                     int parsedImm = Integer.parseInt(binaryString.substring(11, 16), 2);
@@ -47,23 +45,23 @@ public class LC3Instruction {
                     int sr2 = Integer.parseInt(binaryString.substring(13, 16), 2);
                     return new LC3Instruction(LC3Opcode.ADD, drIndex, sr1Index, sr2, 40000, 40000, 40000, 40000, null);
                 }
-
-            case "0101":
+            }
+            case "0101" -> {
                 // AND instruction
                 int drIndex8 = Integer.parseInt(binaryString.substring(4, 7), 2);
                 int srIndex9 = Integer.parseInt(binaryString.substring(7, 10), 2);
                 int srIndex10 = Integer.parseInt(binaryString.substring(13, 16), 2);
                 return new LC3Instruction(LC3Opcode.AND, drIndex8, srIndex9, 40000, 40000, 40000, srIndex10, 40000, null);
-
-            case "0000":
+            }
+            case "0000" -> {
                 // BR instruction
                 boolean n = binaryString.charAt(4) == '1';
                 boolean z = binaryString.charAt(5) == '1';
                 boolean p = binaryString.charAt(6) == '1';
                 int pcOffset = signExtend(Integer.parseInt(binaryString.substring(7), 2), 9);
                 return new LC3Instruction(LC3Opcode.BR, 40000, 40000, 40000, 40000, pcOffset, (n ? 4 : 0) + (z ? 2 : 0) + (p ? 1 : 0), 40000, null);
-
-            case "1100":
+            }
+            case "1100" -> {
                 // JMP or RET instruction
                 if (binaryString.charAt(3) == '0') {
                     // JMP instruction
@@ -73,8 +71,8 @@ public class LC3Instruction {
                     // RET instruction
                     return new LC3Instruction(LC3Opcode.RET, 40000, 40000, 40000, 40000, 40000, 40000, 40000, null);
                 }
-
-            case "0100":
+            }
+            case "0100" -> {
                 // JSR or JSRR instruction
                 if (binaryString.charAt(3) == '0') {
                     // JSRR instruction
@@ -85,88 +83,76 @@ public class LC3Instruction {
                     int pcOffset11 = signExtend(Integer.parseInt(binaryString.substring(4), 2), 11);
                     return new LC3Instruction(LC3Opcode.JSR, 40000, 40000, 40000, 40000, pcOffset11, 40000, 40000, null);
                 }
-
-            case "0010":
+            }
+            case "0010" -> {
                 // LD instruction
                 int drIndex1 = Integer.parseInt(binaryString.substring(4, 7), 2);
                 int pcOffset9 = signExtend(Integer.parseInt(binaryString.substring(7), 2), 9);
                 return new LC3Instruction(LC3Opcode.LD, drIndex1, 40000, 40000, 40000, pcOffset9, 40000, 40000, null);
-
-            case "1010":
+            }
+            case "1010" -> {
                 // LDI instruction
                 int drIndex2 = Integer.parseInt(binaryString.substring(4, 7), 2);
                 int pcOffset9_2 = signExtend(Integer.parseInt(binaryString.substring(7), 2), 9);
                 return new LC3Instruction(LC3Opcode.LDI, drIndex2, 40000, 40000, 40000, pcOffset9_2, 40000, 40000, null);
-
-            case "0110":
+            }
+            case "0110" -> {
                 // LDR instruction
                 int drIndex3 = Integer.parseInt(binaryString.substring(4, 7), 2);
                 int baseRIndex6 = Integer.parseInt(binaryString.substring(7, 10), 2);
                 int offset6 = signExtend(Integer.parseInt(binaryString.substring(10, 16), 2), 6);
                 return new LC3Instruction(LC3Opcode.LDR, drIndex3, 40000, 40000, 40000, offset6, baseRIndex6, 40000, null);
-
-            case "1110":
+            }
+            case "1110" -> {
                 // LEA instruction
                 int drIndex4 = Integer.parseInt(binaryString.substring(4, 7), 2);
                 int pcOffset9_3 = signExtend(Integer.parseInt(binaryString.substring(7), 2), 9);
                 return new LC3Instruction(LC3Opcode.LEA, drIndex4, 40000, 40000, 40000, pcOffset9_3, 40000, 40000, null);
-
-            case "1001":
+            }
+            case "1001" -> {
                 // NOT instruction
                 int drIndex5 = Integer.parseInt(binaryString.substring(4, 7), 2);
                 int srIndex = Integer.parseInt(binaryString.substring(7, 10), 2);
                 return new LC3Instruction(LC3Opcode.NOT, drIndex5, srIndex, 40000, 40000, 40000, 40000, 40000, null);
-
-            case "1101":
+            }
+            case "1101" -> {
                 // RTI instruction
                 return new LC3Instruction(LC3Opcode.RTI, 40000, 40000, 40000, 40000, 40000, 40000, 40000, null);
-
-            case "0011":
+            }
+            case "0011" -> {
                 // ST instruction
                 int srIndex4 = Integer.parseInt(binaryString.substring(4, 7), 2);
                 int pcOffset9_4 = signExtend(Integer.parseInt(binaryString.substring(7), 2), 9);
                 return new LC3Instruction(LC3Opcode.ST, 40000, srIndex4, 40000, 40000, pcOffset9_4, 40000, 40000, null);
-
-            case "1011":
+            }
+            case "1011" -> {
                 // STI instruction
                 int srIndex5 = Integer.parseInt(binaryString.substring(4, 7), 2);
                 int pcOffset9_5 = signExtend(Integer.parseInt(binaryString.substring(7), 2), 9);
                 return new LC3Instruction(LC3Opcode.STI, 40000, srIndex5, 40000, 40000, pcOffset9_5, 40000, 40000, null);
-
-            case "0111":
+            }
+            case "0111" -> {
                 // STR instruction
                 int srIndex6 = Integer.parseInt(binaryString.substring(4, 7), 2);
                 int baseRIndex7 = Integer.parseInt(binaryString.substring(7, 10), 2);
                 int offset6_2 = signExtend(Integer.parseInt(binaryString.substring(10, 16), 2), 6);
                 return new LC3Instruction(LC3Opcode.STR, 40000, srIndex6, 40000, 40000, offset6_2, baseRIndex7, 40000, null);
-
-
-            case "1111":
+            }
+            case "1111" -> {
                 // TRAP instruction
                 int trapvect8 = Integer.parseInt(binaryString.substring(8, 16), 2);
                 String trapvect8Hex = "0x" + Integer.toHexString(trapvect8);
-                String trapMessage = "";
-                switch (trapvect8Hex) {
-                    case "0x20":
-                        trapMessage = "GETC";
-                        break;
-                    case "0x21":
-                        trapMessage = "OUT";
-                        break;
-                    case "0x22":
-                        trapMessage = "PUTS";
-                        break;
-                    case "0x23":
-                        trapMessage = "IN";
-                        break;
-                    case "0x25":
-                        trapMessage = "HALT";
-                        break;
-                }
+                String trapMessage = switch (trapvect8Hex) {
+                    case "0x20" -> "GETC";
+                    case "0x21" -> "OUT";
+                    case "0x22" -> "PUTS";
+                    case "0x23" -> "IN";
+                    case "0x25" -> "HALT";
+                    default -> throw new RuntimeException("Illegal/unknown trap vector: " + trapvect8Hex);
+                };
                 return new LC3Instruction(LC3Opcode.TRAP, 40000, 40000, 40000, 40000, 40000, 40000, trapvect8, trapMessage);
-
-            default:
-                throw new IllegalArgumentException("Invalid binary string: " + binaryString);
+            }
+            default -> throw new IllegalArgumentException("Invalid binary string: " + binaryString);
         }
     }
 

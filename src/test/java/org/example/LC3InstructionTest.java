@@ -50,4 +50,18 @@ class LC3InstructionTest {
         assertEquals(-1, signExtend(31, 5));
         assertEquals(-5, signExtend(27, 5));
     }
+
+    @Test
+    void trapVectTest() {
+        String s = "1111 0000 0010 0011".replaceAll("\\s+", "");
+        LC3Instruction instruction = decode(s);
+        assertEquals(35, instruction.trapvect8);
+        assertEquals(LC3Opcode.TRAP, instruction.opcode);
+    }
+
+    @Test
+    void illegalOrUnknownTrapVectTest() {
+        String s = "1111 0000 0010 1111".replaceAll("\\s+", "");
+        assertThrows(RuntimeException.class, () -> decode(s));
+    }
 }
