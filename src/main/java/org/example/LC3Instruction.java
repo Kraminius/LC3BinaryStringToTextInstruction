@@ -63,13 +63,14 @@ public class LC3Instruction {
             }
             case "1100" -> {
                 // JMP or RET instruction
-                if (binaryString.charAt(3) == '0') {
-                    // JMP instruction
-                    int baseRIndex = Integer.parseInt(binaryString.substring(4, 7), 2);
-                    return new LC3Instruction(LC3Opcode.JMP, 40000, baseRIndex, 40000, 40000, 40000, 40000, 40000, null);
-                } else {
+                boolean isRetInstruction = binaryString.charAt(7) == '1' && binaryString.charAt(8) == '1' && binaryString.charAt(9) == '1';
+                if (isRetInstruction) {
                     // RET instruction
-                    return new LC3Instruction(LC3Opcode.RET, 40000, 40000, 40000, 40000, 40000, 40000, 40000, null);
+                    return new LC3Instruction(LC3Opcode.RET, 40000, 40000, 40000, 40000, 40000, 0b111, 40000, null);
+                } else {
+                    // JMP instruction
+                    int baseRIndex = Integer.parseInt(binaryString.substring(7, 10), 2);
+                    return new LC3Instruction(LC3Opcode.JMP, 40000, 40000, 40000, 40000, 40000, baseRIndex, 40000, null);
                 }
             }
             case "0100" -> {

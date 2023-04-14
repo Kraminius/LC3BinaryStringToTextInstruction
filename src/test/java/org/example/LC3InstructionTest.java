@@ -14,7 +14,6 @@ class LC3InstructionTest {
         // R2 = R1 + R0
         String s = "0001 010 001 000 000".replaceAll("\\s+", "");
         LC3Instruction instruction = decode(s);
-        System.out.println(instruction);
         assertEquals(1, instruction.sr1);
         assertEquals(0, instruction.sr2);
         assertEquals(2, instruction.dr);
@@ -71,11 +70,11 @@ class LC3InstructionTest {
         // jump to address in R1
         String s = "0100 000 001 000 000".replaceAll("\\s+", "");
         LC3Instruction instruction = decode(s);
-        System.out.println(instruction);
         assertEquals(1, instruction.baseR);
         assertEquals(LC3Opcode.JSRR, instruction.opcode);
 
     }
+
 
     @Test
     void jumpSubroutinePCOffsetTest() {
@@ -83,9 +82,28 @@ class LC3InstructionTest {
         // offset is 16 + 8 = 24
         String s = "0100 1 000 0001 1000".replaceAll("\\s+", "");
         LC3Instruction instruction = decode(s);
-        System.out.println(instruction);
         assertEquals(24, instruction.offset);
         assertEquals(LC3Opcode.JSR, instruction.opcode);
+
+    }
+
+    @Test
+    void jumpTest() {
+        // jump to address in R1
+        String s = "1100 000 110 000 000".replaceAll("\\s+", "");
+        LC3Instruction instruction = decode(s);
+        assertEquals(6, instruction.baseR);
+        assertEquals(LC3Opcode.JMP, instruction.opcode);
+
+    }
+
+    @Test
+    void retTest() {
+        // jump to address in R1
+        String s = "1100 000 111 000 000".replaceAll("\\s+", "");
+        LC3Instruction instruction = decode(s);
+        assertEquals(7, instruction.baseR);
+        assertEquals(LC3Opcode.RET, instruction.opcode);
 
     }
 }
