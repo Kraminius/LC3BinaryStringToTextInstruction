@@ -8,7 +8,7 @@ public class LC3Instruction {
     int sr2;
 
     int imm5value;
-    int offset6;
+    int offset;
     int baseR;
     int trapvect8;
 
@@ -20,7 +20,7 @@ public class LC3Instruction {
         this.sr1 = sr1;
         this.sr2 = sr2;
         this.imm5value = imm5value;
-        this.offset6 = offset6;
+        this.offset = offset6;
         this.baseR = baseR;
         this.trapvect8 = trapvect8;
         this.trapMessage = trapMessage;
@@ -74,13 +74,13 @@ public class LC3Instruction {
             }
             case "0100" -> {
                 // JSR or JSRR instruction
-                if (binaryString.charAt(3) == '0') {
+                if (binaryString.charAt(4) == '0') {
                     // JSRR instruction
-                    int baseRIndex = Integer.parseInt(binaryString.substring(4, 7), 2);
-                    return new LC3Instruction(LC3Opcode.JSRR, baseRIndex, 40000, 40000, 40000, 40000, 40000, 40000, null);
+                    int baseRIndex = Integer.parseInt(binaryString.substring(7, 10), 2);
+                    return new LC3Instruction(LC3Opcode.JSRR, 40000, 40000, 40000, 40000, 40000, baseRIndex, 40000, null);
                 } else {
                     // JSR instruction
-                    int pcOffset11 = signExtend(Integer.parseInt(binaryString.substring(4), 2), 11);
+                    int pcOffset11 = signExtend(Integer.parseInt(binaryString.substring(5), 2), 11);
                     return new LC3Instruction(LC3Opcode.JSR, 40000, 40000, 40000, 40000, pcOffset11, 40000, 40000, null);
                 }
             }
@@ -195,8 +195,8 @@ public class LC3Instruction {
             builder.append("BaseR=").append(baseR);
             builder.append(", ");
         }
-        if (offset6 != 40000) {
-            builder.append("Offset6=").append(offset6);
+        if (offset != 40000) {
+            builder.append("Offset6=").append(offset);
             builder.append(", ");
         }
         if (trapvect8 != 40000) {

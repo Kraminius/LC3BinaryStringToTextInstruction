@@ -64,4 +64,28 @@ class LC3InstructionTest {
         String s = "1111 0000 0010 1111".replaceAll("\\s+", "");
         assertThrows(RuntimeException.class, () -> decode(s));
     }
+
+    // Test for jsrr
+    @Test
+    void jumpSubroutineTest() {
+        // jump to address in R1
+        String s = "0100 000 001 000 000".replaceAll("\\s+", "");
+        LC3Instruction instruction = decode(s);
+        System.out.println(instruction);
+        assertEquals(1, instruction.baseR);
+        assertEquals(LC3Opcode.JSRR, instruction.opcode);
+
+    }
+
+    @Test
+    void jumpSubroutinePCOffsetTest() {
+        // jump to pc offset
+        // offset is 16 + 8 = 24
+        String s = "0100 1 000 0001 1000".replaceAll("\\s+", "");
+        LC3Instruction instruction = decode(s);
+        System.out.println(instruction);
+        assertEquals(24, instruction.offset);
+        assertEquals(LC3Opcode.JSR, instruction.opcode);
+
+    }
 }
