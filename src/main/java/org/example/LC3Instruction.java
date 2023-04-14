@@ -2,17 +2,17 @@ package org.example;
 
 public class LC3Instruction {
 
-    private LC3Opcode opcode;
-    private int dr;
-    private int sr1;
-    private int sr2;
+    LC3Opcode opcode;
+    int dr;
+    int sr1;
+    int sr2;
 
-    private int imm5value;
-    private int offset6;
-    private int baseR;
-    private int trapvect8;
+    int imm5value;
+    int offset6;
+    int baseR;
+    int trapvect8;
 
-    private String trapMessage;
+    String trapMessage;
 
     public LC3Instruction(LC3Opcode opcode, int dr, int sr1, int sr2, int imm5value, int offset6, int baseR, int trapvect8, String trapMessage) {
         this.opcode = opcode;
@@ -34,15 +34,18 @@ public class LC3Instruction {
                 // ADD instruction
                 int drIndex = Integer.parseInt(binaryString.substring(4, 7), 2);
                 int sr1Index = Integer.parseInt(binaryString.substring(7, 10), 2);
-                int sr2OrImm5Value = Integer.parseInt(binaryString.substring(11, 16), 2);
 
-                if (binaryString.charAt(10) == '0') {
-                    // ADD instruction with two registers
-                    return new LC3Instruction(LC3Opcode.ADD, drIndex, sr1Index, sr2OrImm5Value, 40000, 40000, 40000, 40000, null);
-                } else {
+                boolean isImmediate = Integer.parseInt(binaryString.substring(10, 11)) == 1;
+
+                if (isImmediate) {
                     // ADD instruction with immediate value
-                    int immediateValue = LC3Instruction.signExtend(sr2OrImm5Value, 5);
+                    int parsedImm = Integer.parseInt(binaryString.substring(11, 16), 2);
+                    int immediateValue = signExtend(parsedImm, 5);
                     return new LC3Instruction(LC3Opcode.ADD, drIndex, sr1Index, 40000, immediateValue, 40000, 40000, 40000, null);
+                } else {
+                    // ADD instruction with two registers
+                    int sr2 = Integer.parseInt(binaryString.substring(13, 16), 2);
+                    return new LC3Instruction(LC3Opcode.ADD, drIndex, sr1Index, sr2, 40000, 40000, 40000, 40000, null);
                 }
 
             case "0101":
@@ -141,7 +144,7 @@ public class LC3Instruction {
             case "1111":
                 // TRAP instruction
                 int trapvect8 = Integer.parseInt(binaryString.substring(8, 16), 2);
-                String trapvect8Hex = "0x"+ Integer.toHexString(trapvect8);
+                String trapvect8Hex = "0x" + Integer.toHexString(trapvect8);
                 String trapMessage = "";
                 switch (trapvect8Hex) {
                     case "0x20":
@@ -171,51 +174,51 @@ public class LC3Instruction {
         if ((value & (1 << (bits - 1))) != 0) {
             // negative number
             int mask = (1 << bits) - 1;
-            int signExtendedValue = (value | ~mask);
-            return signExtendedValue;
+            return (value | ~mask);
         } else {
             // positive number
             return value;
         }
     }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append(opcode.name());
         builder.append(" ");
 
-        if (dr != 40000){
-            builder.append("DR=" + dr);
+        if (dr != 40000) {
+            builder.append("DR=").append(dr);
             builder.append(", ");
         }
 
-        if (sr1 != 40000){
-            builder.append("SR1=" + sr1);
+        if (sr1 != 40000) {
+            builder.append("SR1=").append(sr1);
             builder.append(", ");
         }
-        if (sr2 != 40000){
-            builder.append("SR2=" + sr2);
+        if (sr2 != 40000) {
+            builder.append("SR2=").append(sr2);
             builder.append(", ");
         }
-        if (imm5value != 40000){
-            builder.append(("Imm5value="+ imm5value));
+        if (imm5value != 40000) {
+            builder.append("Imm5value=").append(imm5value);
             builder.append(", ");
         }
 
-        if (baseR != 40000){
-            builder.append("BaseR=" + baseR);
+        if (baseR != 40000) {
+            builder.append("BaseR=").append(baseR);
             builder.append(", ");
         }
-        if (offset6 != 40000){
-            builder.append("Offset6=" + offset6);
+        if (offset6 != 40000) {
+            builder.append("Offset6=").append(offset6);
             builder.append(", ");
         }
-        if (trapvect8 != 40000){
-            builder.append("TrapVect8=" + trapvect8);
+        if (trapvect8 != 40000) {
+            builder.append("TrapVect8=").append(trapvect8);
             builder.append(", ");
         }
-        if (trapMessage != null){
-            builder.append("TRAP=" + trapMessage);
+        if (trapMessage != null) {
+            builder.append("TRAP=").append(trapMessage);
         }
         return builder.toString();
     }

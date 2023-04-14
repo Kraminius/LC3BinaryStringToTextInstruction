@@ -4,7 +4,6 @@ public enum LC3Opcode {
     ADD("0001"),
     AND("0101"),
     NOT("1001"),
-    ADDI("0000"),
     LDI("1010"),
     LD("0010"),
     LDR("0110"),
@@ -22,7 +21,7 @@ public enum LC3Opcode {
 
     private final String binaryString;
 
-    private LC3Opcode(String binaryString) {
+    LC3Opcode(String binaryString) {
         this.binaryString = binaryString;
     }
 
