@@ -14,13 +14,13 @@ public class LC3Instruction {
 
     String trapMessage;
 
-    public LC3Instruction(LC3Opcode opcode, int dr, int sr1, int sr2, int imm5value, int offset6, int baseR, int trapvect8, String trapMessage) {
+    public LC3Instruction(LC3Opcode opcode, int dr, int sr1, int sr2, int imm5value, int offset, int baseR, int trapvect8, String trapMessage) {
         this.opcode = opcode;
         this.dr = dr;
         this.sr1 = sr1;
         this.sr2 = sr2;
         this.imm5value = imm5value;
-        this.offset = offset6;
+        this.offset = offset;
         this.baseR = baseR;
         this.trapvect8 = trapvect8;
         this.trapMessage = trapMessage;
@@ -28,7 +28,6 @@ public class LC3Instruction {
 
     public static LC3Instruction decode(String binaryString) {
         String opcode = binaryString.substring(0, 4);
-
         switch (opcode) {
             case "0001" -> {
                 // ADD instruction
@@ -48,10 +47,20 @@ public class LC3Instruction {
             }
             case "0101" -> {
                 // AND instruction
-                int drIndex8 = Integer.parseInt(binaryString.substring(4, 7), 2);
-                int srIndex9 = Integer.parseInt(binaryString.substring(7, 10), 2);
-                int srIndex10 = Integer.parseInt(binaryString.substring(13, 16), 2);
-                return new LC3Instruction(LC3Opcode.AND, drIndex8, srIndex9, 40000, 40000, 40000, srIndex10, 40000, null);
+                int dr = Integer.parseInt(binaryString.substring(4, 7), 2);
+                int sr1 = Integer.parseInt(binaryString.substring(7, 10), 2);
+                boolean isImmediate = Integer.parseInt(binaryString.substring(10, 11)) == 1;
+
+                if (isImmediate) {
+                    // ADD instruction with immediate value
+                    int parsedImm = Integer.parseInt(binaryString.substring(11, 16), 2);
+                    int immediateValue = signExtend(parsedImm, 5);
+                    return new LC3Instruction(LC3Opcode.AND, dr, sr1, 40000, immediateValue, 40000, 40000, 40000, null);
+                } else {
+                    // ADD instruction with two registers
+                    int sr2 = Integer.parseInt(binaryString.substring(13, 16), 2);
+                    return new LC3Instruction(LC3Opcode.AND, dr, sr1, sr2, 40000, 40000, 40000, 40000, null);
+                }
             }
             case "0000" -> {
                 // BR instruction
@@ -149,11 +158,13 @@ public class LC3Instruction {
                     case "0x22" -> "PUTS";
                     case "0x23" -> "IN";
                     case "0x25" -> "HALT";
-                    default -> throw new RuntimeException("Illegal/unknown trap vector: " + trapvect8Hex);
+                    default ->
+                            throw new RuntimeException("Illegal/unknown trap vector: " + trapvect8Hex);
                 };
                 return new LC3Instruction(LC3Opcode.TRAP, 40000, 40000, 40000, 40000, 40000, 40000, trapvect8, trapMessage);
             }
-            default -> throw new IllegalArgumentException("Invalid binary string: " + binaryString);
+            default ->
+                    throw new IllegalArgumentException("Invalid binary string: " + binaryString);
         }
     }
 

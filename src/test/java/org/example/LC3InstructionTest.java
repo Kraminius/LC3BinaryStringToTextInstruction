@@ -43,6 +43,28 @@ class LC3InstructionTest {
     }
 
     @Test
+    void andTest() {
+        // R2 = R1 & 7
+        String s = "0101 110 011 0 00010".replaceAll("\\s+", "");
+        LC3Instruction instruction = decode(s);
+        assertEquals(3, instruction.sr1);
+        assertEquals(2, instruction.sr2);
+        assertEquals(6, instruction.dr);
+        assertEquals(LC3Opcode.AND, instruction.opcode);
+    }
+
+    @Test
+    void andImmediateValueTest() {
+        // R2 = R1 & 7
+        String s = "0101 110 001 1 00111".replaceAll("\\s+", "");
+        LC3Instruction instruction = decode(s);
+        assertEquals(1, instruction.sr1);
+        assertEquals(7, instruction.imm5value);
+        assertEquals(6, instruction.dr);
+        assertEquals(LC3Opcode.AND, instruction.opcode);
+    }
+
+    @Test
     void signExtendTest() {
         assertEquals(0, signExtend(0, 5));
         assertEquals(4, signExtend(4, 5));
@@ -104,6 +126,5 @@ class LC3InstructionTest {
         LC3Instruction instruction = decode(s);
         assertEquals(7, instruction.baseR);
         assertEquals(LC3Opcode.RET, instruction.opcode);
-
     }
 }
