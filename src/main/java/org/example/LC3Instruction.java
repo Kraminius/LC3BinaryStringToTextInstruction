@@ -183,41 +183,33 @@ public class LC3Instruction {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append(opcode.name());
-        builder.append(" ");
 
         if (dr != 40000) {
-            builder.append("DR=").append(dr);
-            builder.append(", ");
+            builder.append(" R").append(dr);
         }
 
         if (sr1 != 40000) {
-            builder.append("SR1=").append(sr1);
-            builder.append(", ");
+            builder.append(", R").append(sr1);
         }
         if (sr2 != 40000) {
-            builder.append("SR2=").append(sr2);
-            builder.append(", ");
+            builder.append(", R").append(sr2);
         }
         if (imm5value != 40000) {
-            builder.append("Imm5value=").append(imm5value);
-            builder.append(", ");
+            builder.append(", #").append(imm5value);
         }
-
         if (baseR != 40000) {
-            builder.append("BaseR=").append(baseR);
-            builder.append(", ");
+            builder.append(", R").append(baseR);
         }
         if (offset != 40000) {
-            builder.append("Offset6=").append(offset);
-            builder.append(", ");
+            builder.append(", #").append(offset);
         }
         if (trapvect8 != 40000) {
-            builder.append("TrapVect8=").append(trapvect8);
-            builder.append(", ");
+            builder.append(", x").append(Integer.toHexString(trapvect8).toUpperCase());
         }
         if (trapMessage != null) {
-            builder.append("TRAP=").append(trapMessage);
+            builder.append(", ").append(trapMessage);
         }
+
         return builder.toString();
     }
 }
