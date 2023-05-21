@@ -1,4 +1,5 @@
 package org.example;
+/*
 
 public enum LC3Opcode {
     ADD("0001"),
@@ -29,3 +30,5 @@ public enum LC3Opcode {
         return binaryString;
     }
 }
+
+ */

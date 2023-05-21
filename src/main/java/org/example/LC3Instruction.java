@@ -1,5 +1,5 @@
 package org.example;
-
+/*
 public class LC3Instruction {
 
     LC3Opcode opcode;
@@ -212,4 +212,4 @@ public class LC3Instruction {
 
         return builder.toString();
     }
-}
+}*/
