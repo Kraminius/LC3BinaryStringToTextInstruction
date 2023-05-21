@@ -16,6 +16,7 @@ public class LC3BinaryTranslator {
         String op = opcode.substring(0, 4);
         String dr = opcode.substring(4, 7);
         String sr1 = opcode.substring(7, 10);
+        String pcOffset9 = opcode.substring(7, 16);
         String bit11 = opcode.substring(10, 11);
         String baseR = opcode.substring(7,10);
         String arg = opcode.substring(11);
@@ -51,7 +52,7 @@ public class LC3BinaryTranslator {
             if (n.equals("1")) opcodeTranslation.append("n");
             if (z.equals("1")) opcodeTranslation.append("z");
             if (p.equals("1")) opcodeTranslation.append("p");
-            opcodeTranslation.append(" ").append(signedBinaryToDecimal(sr1 + bit11 + arg, false));  // PC-relative
+            opcodeTranslation.append(" ").append(signedBinaryToDecimal(pcOffset9, false));  // PC-relative
         }
 
         //NOT
@@ -70,14 +71,14 @@ public class LC3BinaryTranslator {
         }
 
         if (op.equals("0010")) {  // LD
-            int offset = signedBinaryToDecimal(sr1 + bit11 + arg, false);
-            opcodeTranslation.append("LD R").append(Integer.parseInt(dr, 2)).append(", ").append(signedBinaryToDecimal(sr1 + bit11 + arg, false));
+            int offset = signedBinaryToDecimal(pcOffset9, false);
+            opcodeTranslation.append("LD R").append(Integer.parseInt(dr, 2)).append(", ").append(signedBinaryToDecimal(pcOffset9, false));
             opcodeTranslation.append(" ; R").append(Integer.parseInt(dr, 2)).append(" -> x").append(Integer.toHexString(currentAddress + offset + 1));
         }
 
         if (op.equals("1010")) {  // LDI
-            int offset = signedBinaryToDecimal(sr1 + bit11 + arg, false);
-            opcodeTranslation.append("LDI R").append(Integer.parseInt(dr, 2)).append(", ").append(signedBinaryToDecimal(sr1 + bit11 + arg, false));
+            int offset = signedBinaryToDecimal(pcOffset9, false);
+            opcodeTranslation.append("LDI R").append(Integer.parseInt(dr, 2)).append(", ").append(signedBinaryToDecimal(pcOffset9, false));
             opcodeTranslation.append(" ; R").append(Integer.parseInt(dr, 2)).append(" -> x").append(Integer.toHexString(currentAddress + offset + 1));
         }
 
@@ -86,20 +87,20 @@ public class LC3BinaryTranslator {
         }
 
         if (op.equals("1110")) {  // LEA
-            int offset = signedBinaryToDecimal(sr1 + bit11 + arg, false);
-            opcodeTranslation.append("LEA R").append(Integer.parseInt(dr, 2)).append(", ").append(signedBinaryToDecimal(sr1 + bit11 + arg, false));
+            int offset = signedBinaryToDecimal(pcOffset9, false);
+            opcodeTranslation.append("LEA R").append(Integer.parseInt(dr, 2)).append(", ").append(signedBinaryToDecimal(pcOffset9, false));
             opcodeTranslation.append(" ; R").append(Integer.parseInt(dr, 2)).append(" -> x").append(Integer.toHexString(currentAddress + offset + 1));
         }
 
         if (op.equals("0011")) {  // ST
-            int offset = signedBinaryToDecimal(sr1 + bit11 + arg, false);
-            opcodeTranslation.append("ST R").append(Integer.parseInt(dr, 2)).append(", ").append(signedBinaryToDecimal(sr1 + bit11 + arg, false));
+            int offset = signedBinaryToDecimal(pcOffset9, false);
+            opcodeTranslation.append("ST R").append(Integer.parseInt(dr, 2)).append(", ").append(signedBinaryToDecimal(pcOffset9, false));
             opcodeTranslation.append(" ; R").append(Integer.parseInt(dr, 2)).append(" -> x").append(Integer.toHexString(currentAddress + offset + 1));
         }
 
         if (op.equals("1011")) {  // STI
-            int offset = signedBinaryToDecimal(sr1 + bit11 + arg, false);
-            opcodeTranslation.append("STI R").append(Integer.parseInt(dr, 2)).append(", ").append(signedBinaryToDecimal(sr1 + bit11 + arg, false));
+            int offset = signedBinaryToDecimal(pcOffset9, false);
+            opcodeTranslation.append("STI R").append(Integer.parseInt(dr, 2)).append(", ").append(signedBinaryToDecimal(pcOffset9, false));
             opcodeTranslation.append(" ; R").append(Integer.parseInt(dr, 2)).append(" -> x").append(Integer.toHexString(currentAddress + offset + 1));
         }
 
@@ -142,7 +143,7 @@ public class LC3BinaryTranslator {
                     opcodeTranslation.append("HALT");
                     break;
                 default:
-                    opcodeTranslation.append("TRAP ").append(trapvec);  // Default case for unsupported trap vectors
+                    opcodeTranslation.append("TRAP UNKNOWN").append(" ; Unknown Trap - Check input");  // Default case for unsupported trap vectors
             }
         }
 
